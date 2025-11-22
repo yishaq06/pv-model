@@ -17,3 +17,33 @@ A simple Streamlit app showing the GDP of different countries in the world.
    ```
    $ streamlit run streamlit_app.py
    ```
+
+```
+pv-model
+├─ .devcontainer
+│  └─ devcontainer.json
+├─ LICENSE
+├─ README.md
+├─ data
+│  ├─ MODEL_DEV_DATA_SHEET.xlsx
+│  └─ gdp_data.csv
+├─ models
+│  ├─ carbon_model.py
+│  ├─ lcoe_model.py
+│  ├─ savings_model.py
+│  └─ system_size_model.py
+├─ pv_model_outputs
+│  ├─ cleaned_pv_dataset.csv
+│  ├─ models_summary.csv
+│  ├─ rf_25yr_savings.pkl
+│  ├─ rf_capacity.pkl
+│  ├─ rf_co2.pkl
+│  └─ rf_lcoe.pkl
+├─ requirements.txt
+├─ streamlit_app.py
+├─ train_pv_models.py
+└─ utils
+   ├─ charts.py
+   └─ preprocessing.py
+
+```

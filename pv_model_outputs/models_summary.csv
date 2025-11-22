@@ -1,0 +1,5 @@
+target,column,trained,rows_used,cv_mae,model_path
+25yr_savings,Savings at 25yrs lifespan -(₦) -(V)           (J-K),True,8,226009170.54188338,./pv_model_outputs/rf_25yr_savings.pkl
+capacity,existing Pv system. Size/capacity,True,8,9.998472222222219,./pv_model_outputs/rf_capacity.pkl
+co2,Reduced carbon emission  (tonnes) (Q) P/1000,True,8,10.63441667474999,./pv_model_outputs/rf_co2.pkl
+lcoe,LCOE-N/unit (T),True,8,143.91583567138144,./pv_model_outputs/rf_lcoe.pkl
