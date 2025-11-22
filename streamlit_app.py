@@ -182,8 +182,8 @@ with st.sidebar:
 
     load_profile_file = st.file_uploader("Upload Load Profile (CSV)", type=["csv"])
     tariff = st.number_input("Tariff Rate (₦/kWh)", min_value=0.0, value=120.0)
-    capex = st.number_input("CAPEX (₦)", min_value=0.0, value=10_000_000.0)
-    opex = st.number_input("Annual OPEX (₦)", min_value=0.0, value=200_000.0)
+    capex = st.number_input("Initial Cost (₦)", min_value=0.0, value=10_000_000.0)
+    opex = st.number_input("Annual Maintenance (₦)", min_value=0.0, value=200_000.0)
     discount_rate = st.number_input("Discount Rate (%)", min_value=0.0, max_value=30.0, value=8.0)
     irradiance = st.number_input("Solar Irradiance (kWh/m²/day)", min_value=1.0, value=5.2)
     carbon_factor = st.number_input("Grid CO₂ Factor (kg/kWh)", min_value=0.1, value=0.55)
