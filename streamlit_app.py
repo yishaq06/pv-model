@@ -151,6 +151,88 @@
 #         )
 
 
+# import streamlit as st
+# import pandas as pd
+
+# from models.savings_model import predict_savings
+# from models.system_size_model import predict_system_size
+# from models.carbon_model import predict_carbon_reduction
+# from models.lcoe_model import predict_lcoe
+# from utils.preprocessing import clean_load_profile
+
+# st.set_page_config(
+#     page_title="Energy Forecasting Suite",
+#     layout="wide"
+# )
+
+# st.title("Energy System Forecasting Suite")
+
+# st.markdown("""
+# This tool provides machine-learning based forecasts for:
+# - 25-year savings  
+# - Optimal solar system size  
+# - Carbon emission reductions  
+# - LCOE estimates  
+# """)
+
+# # ---------------- Sidebar Input Section ----------------
+
+# with st.sidebar:
+#     st.header("Input Parameters")
+
+#     load_profile_file = st.file_uploader("Upload Load Profile (CSV)", type=["csv"])
+#     tariff = st.number_input("Tariff Rate (₦/kWh)", min_value=0.0, value=120.0)
+#     capex = st.number_input("Initial Cost (₦)", min_value=0.0, value=10_000_000.0)
+#     opex = st.number_input("Annual Maintenance (₦)", min_value=0.0, value=200_000.0)
+#     discount_rate = st.number_input("Discount Rate (%)", min_value=0.0, max_value=30.0, value=8.0)
+#     irradiance = st.number_input("Solar Irradiance (kWh/m²/day)", min_value=1.0, value=5.2)
+#     carbon_factor = st.number_input("Grid CO₂ Factor (kg/kWh)", min_value=0.1, value=0.55)
+
+#     run_button = st.button("Run Forecast", type="primary")
+
+# # ---------------- Run Models ----------------
+
+# if run_button:
+#     if not load_profile_file:
+#         st.error("Please upload a load profile first.")
+#         st.stop()
+
+#     df = pd.read_csv(load_profile_file)
+#     df = clean_load_profile(df)
+
+#     with st.spinner("Running ML predictions..."):
+#         savings = predict_savings(df, tariff, capex, opex, discount_rate)
+#         system_size = predict_system_size(df)
+#         carbon = predict_carbon_reduction(df, carbon_factor)
+#         lcoe_value = predict_lcoe(capex, opex, irradiance)
+
+#     st.success("Forecast completed successfully!")
+
+#     # ---------------- Results ----------------
+
+#     col1, col2 = st.columns(2)
+
+#     with col1:
+#         st.subheader("Optimal System Size")
+#         st.metric("Recommended Solar PV Size", f"{system_size['pv_kw']} kW")
+#         st.metric("Recommended Battery Storage", f"{system_size['battery_kwh']} kWh")
+
+#     with col2:
+#         st.subheader("Carbon Reduction")
+#         st.metric("Annual CO₂ Avoided", f"{carbon['annual_tons']} tons")
+#         st.metric("Lifetime CO₂ Avoided", f"{carbon['lifetime_tons']} tons")
+
+#     st.subheader("25-Year Savings Forecast")
+#     st.line_chart(savings["annual_savings"])
+
+#     st.metric("Payback Period", f"{savings['payback_years']} years")
+#     st.metric("Total 25-Year Savings", f"₦{savings['total_savings']:,.2f}")
+
+#     st.subheader("Levelized Cost of Energy (LCOE)")
+#     st.metric("LCOE", f"₦{lcoe_value:.2f} / kWh")
+
+
+
 import streamlit as st
 import pandas as pd
 
@@ -160,47 +242,58 @@ from models.carbon_model import predict_carbon_reduction
 from models.lcoe_model import predict_lcoe
 from utils.preprocessing import clean_load_profile
 
+# --------------------- PAGE CONFIG ---------------------
 st.set_page_config(
     page_title="Energy Forecasting Suite",
-    layout="wide"
+    layout="wide",
 )
 
-st.title("Energy System Forecasting Suite")
+# --------------------- HEADER --------------------------
+st.markdown(
+    """
+    <h1 style="text-align:center; margin-bottom:0;">⚡ Energy System Forecasting Suite</h1>
+    <p style="text-align:center; font-size:18px; margin-top:4px;">
+        Machine-learning driven forecasts for system sizing, carbon reduction, LCOE and long-term savings.
+    </p>
+    <hr>
+    """,
+    unsafe_allow_html=True
+)
 
-st.markdown("""
-This tool provides machine-learning based forecasts for:
-- 25-year savings  
-- Optimal solar system size  
-- Carbon emission reductions  
-- LCOE estimates  
-""")
-
-# ---------------- Sidebar Input Section ----------------
-
+# --------------------- SIDEBAR --------------------------
 with st.sidebar:
-    st.header("Input Parameters")
+    st.header("⚙️ Input Parameters")
 
-    load_profile_file = st.file_uploader("Upload Load Profile (CSV)", type=["csv"])
+    st.markdown("### Load Profile")
+    load_profile_file = st.file_uploader(
+        "Upload CSV file",
+        type=["csv"],
+        help="Hourly or sub-hourly load consumption data"
+    )
+
+    st.markdown("### Financial Inputs")
     tariff = st.number_input("Tariff Rate (₦/kWh)", min_value=0.0, value=120.0)
     capex = st.number_input("Initial Cost (₦)", min_value=0.0, value=10_000_000.0)
     opex = st.number_input("Annual Maintenance (₦)", min_value=0.0, value=200_000.0)
     discount_rate = st.number_input("Discount Rate (%)", min_value=0.0, max_value=30.0, value=8.0)
+
+    st.markdown("### Solar Parameters")
     irradiance = st.number_input("Solar Irradiance (kWh/m²/day)", min_value=1.0, value=5.2)
     carbon_factor = st.number_input("Grid CO₂ Factor (kg/kWh)", min_value=0.1, value=0.55)
 
-    run_button = st.button("Run Forecast", type="primary")
+    st.markdown("---")
+    run_button = st.button("🚀 Run Forecast", type="primary")
 
-# ---------------- Run Models ----------------
-
+# --------------------- LOGIC --------------------------
 if run_button:
     if not load_profile_file:
-        st.error("Please upload a load profile first.")
+        st.error("Please upload a load profile CSV before proceeding.")
         st.stop()
 
     df = pd.read_csv(load_profile_file)
     df = clean_load_profile(df)
 
-    with st.spinner("Running ML predictions..."):
+    with st.spinner("Running intelligent energy predictions..."):
         savings = predict_savings(df, tariff, capex, opex, discount_rate)
         system_size = predict_system_size(df)
         carbon = predict_carbon_reduction(df, carbon_factor)
@@ -208,25 +301,39 @@ if run_button:
 
     st.success("Forecast completed successfully!")
 
-    # ---------------- Results ----------------
+    # --------------------- RESULTS -----------------------
+    st.markdown("## 📊 Forecast Summary")
 
-    col1, col2 = st.columns(2)
+    # --- System Size + Carbon
+    c1, c2 = st.columns(2)
 
-    with col1:
-        st.subheader("Optimal System Size")
+    with c1:
+        st.markdown("### 🔆 Optimal System Size")
         st.metric("Recommended Solar PV Size", f"{system_size['pv_kw']} kW")
         st.metric("Recommended Battery Storage", f"{system_size['battery_kwh']} kWh")
 
-    with col2:
-        st.subheader("Carbon Reduction")
+    with c2:
+        st.markdown("### 🌍 Carbon Emission Reductions")
         st.metric("Annual CO₂ Avoided", f"{carbon['annual_tons']} tons")
         st.metric("Lifetime CO₂ Avoided", f"{carbon['lifetime_tons']} tons")
 
-    st.subheader("25-Year Savings Forecast")
+    # --- Savings Section
+    st.markdown("## 💰 25-Year Financial Savings Forecast")
+
     st.line_chart(savings["annual_savings"])
 
-    st.metric("Payback Period", f"{savings['payback_years']} years")
-    st.metric("Total 25-Year Savings", f"₦{savings['total_savings']:,.2f}")
+    s1, s2 = st.columns(2)
+    with s1:
+        st.metric("Payback Period", f"{savings['payback_years']} years")
+    with s2:
+        st.metric("Total 25-Year Savings", f"₦{savings['total_savings']:,.2f}")
 
-    st.subheader("Levelized Cost of Energy (LCOE)")
+    # --- LCOE
+    st.markdown("## ⚡ Levelized Cost of Energy (LCOE)")
     st.metric("LCOE", f"₦{lcoe_value:.2f} / kWh")
+
+    st.markdown("---")
+    st.markdown(
+        "<p style='text-align:center;color:grey;'>Model outputs generated using ML pipelines.</p>",
+        unsafe_allow_html=True
+    )
