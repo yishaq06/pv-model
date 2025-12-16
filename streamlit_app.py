@@ -151,6 +151,17 @@ with st.sidebar:
         "OPEX (% of CAPEX per year)", min_value=0.0, max_value=5.0, value=1.0
     ) / 100  # convert % to decimal
 
+
+    daily_load = 850.0        # kWh/day
+    peak_demand = 120.0       # kW
+    irradiance = 5.0          # kWh/m²/day
+    tariff = 65.0             # ₦/kWh
+    discount_rate = 10.0      # %
+    carbon_factor = 0.55      # kg/kWh
+    CAPEX_PER_KW = 400_000.0 # ₦/kW
+    OPEX_PERCENT = 0.01       # 1% of CAPEX/year
+
+
     run_button = st.button("Run Forecast", type="primary")
 
 # ---------------- Run Models ----------------
