@@ -89,6 +89,8 @@ if run_button:
         st.metric("Performance Ratio", f"{performance:.1f} %")
 
     st.header("Economic Outcomes")
+    st.metric("Initial Investment Cost (CAPEX)", f"₦{savings['capex']:,.2f}")
+    st.metric("Annual OPEX / Maintenance", f"₦{savings['opex']:,.2f}")
     st.metric("Total 25-Year Savings", f"₦{savings['total_savings']:,.2f}")
     st.metric("Payback Period", f"{savings['payback_years']} years")
 

@@ -81,7 +81,9 @@ def predict_savings(df, tariff, capex, opex, discount):
             return {
                 "annual_savings": cumulative,
                 "total_savings": total_savings,
-                "payback_years": payback_years
+                "payback_years": payback_years,
+                "capex": capex,        # new
+                "opex": opex           # new
             }
         except Exception:
             pass
@@ -92,5 +94,7 @@ def predict_savings(df, tariff, capex, opex, discount):
     return {
         "annual_savings": cumulative,
         "total_savings": cumulative[-1] - capex - (opex * 25),
-        "payback_years": capex / annual_savings if annual_savings > 0 else float('inf')
+        "payback_years": capex / annual_savings if annual_savings > 0 else float('inf'),
+        "capex": capex,        # new
+        "opex": opex           # new
     }
