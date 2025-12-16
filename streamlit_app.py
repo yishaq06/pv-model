@@ -145,7 +145,7 @@ with st.sidebar:
 
     # Optional: Client can confirm CAPEX per kW
     CAPEX_PER_KW = st.number_input(
-        "CAPEX per kW (₦/kW)", min_value=0.0, value=400_000
+        "CAPEX per kW (₦/kW)", min_value=0.0, value=400_000.0
     )
     OPEX_PERCENT = st.number_input(
         "OPEX (% of CAPEX per year)", min_value=0.0, max_value=5.0, value=1.0
