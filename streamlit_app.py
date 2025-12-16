@@ -201,10 +201,12 @@ if run_button:
         st.subheader("PV System Performance")
         st.metric("Performance Ratio", f"{performance:.1f} %")
 
-    with col2:
+    with col1:
         st.header("Economic Outcomes")
         st.metric("Initial Investment Cost (CAPEX)", f"₦{capex:,.2f}")
         st.metric("Annual OPEX / Maintenance", f"₦{opex:,.2f}")
+
+    with col2:
         st.metric("Total 25-Year Savings", f"₦{savings['total_savings']:,.2f}")
         st.metric("Payback Period", f"{savings['payback_years']:.1f} years")
 
