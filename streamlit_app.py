@@ -151,17 +151,6 @@ with st.sidebar:
         "OPEX (% of CAPEX per year)", min_value=0.0, max_value=5.0, value=1.0
     ) / 100  # convert % to decimal
 
-
-    daily_load = 850.0        # kWh/day
-    peak_demand = 120.0       # kW
-    irradiance = 5.0          # kWh/m²/day
-    tariff = 65.0             # ₦/kWh
-    discount_rate = 10.0      # %
-    carbon_factor = 0.55      # kg/kWh
-    CAPEX_PER_KW = 400_000.0 # ₦/kW
-    OPEX_PERCENT = 0.01       # 1% of CAPEX/year
-
-
     run_button = st.button("Run Forecast", type="primary")
 
 # ---------------- Run Models ----------------
@@ -169,9 +158,9 @@ if run_button:
     with st.spinner("Running ML-powered forecasting..."):
 
         # Create synthetic df for compatibility with ML models
-        # df = pd.DataFrame({"load_kwh": [daily_load]})
-        annual_load_kwh = daily_load * 365  # convert kWh/day → kWh/year
-        df = pd.DataFrame({"load_kwh": [annual_load_kwh]})
+        df = pd.DataFrame({"load_kwh": [daily_load]})
+        # annual_load_kwh = daily_load * 365  # convert kWh/day → kWh/year
+        # df = pd.DataFrame({"load_kwh": [annual_load_kwh]})
 
 
         # ---- System Sizing ----
