@@ -158,7 +158,10 @@ if run_button:
     with st.spinner("Running ML-powered forecasting..."):
 
         # Create synthetic df for compatibility with ML models
-        df = pd.DataFrame({"load_kwh": [daily_load]})
+        # df = pd.DataFrame({"load_kwh": [daily_load]})
+        annual_load_kwh = daily_load * 365  # convert kWh/day → kWh/year
+        df = pd.DataFrame({"load_kwh": [annual_load_kwh]})
+
 
         # ---- System Sizing ----
         system_size = predict_system_size(df)  # ML predicted PV and battery size
