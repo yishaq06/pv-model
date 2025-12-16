@@ -101,7 +101,6 @@
 import streamlit as st
 import pandas as pd
 
-from feature_builder import build_features
 from models.savings_model import predict_savings
 from models.system_size_model import predict_system_size
 from models.carbon_model import predict_carbon_reduction
@@ -158,35 +157,24 @@ with st.sidebar:
 if run_button:
     with st.spinner("Running ML-powered forecasting..."):
 
-        # --- Convert daily load to annual load for ML models ---
-        annual_load_kwh = daily_load * 365
+        # Create synthetic df for compatibility with ML models
+        # df = pd.DataFrame({"load_kwh": [daily_load]})
+        annual_load_kwh = daily_load * 365  # convert kWh/day → kWh/year
+        df = pd.DataFrame({"load_kwh": [annual_load_kwh]})
 
-        # --- Prepare feature DataFrame for ML ---
-        df_input = pd.DataFrame({"load_kwh": [annual_load_kwh]})
 
-        # --- System Sizing ---
-        system_size = predict_system_size(df_input)
+        # ---- System Sizing ----
+        system_size = predict_system_size(df)  # ML predicted PV and battery size
 
-        # --- CAPEX & OPEX based on predicted PV size ---
+        # ---- CAPEX & OPEX Derivation ----
         capex = system_size["pv_kw"] * CAPEX_PER_KW
         opex = capex * OPEX_PERCENT
 
-        # --- Build full features DataFrame for downstream models ---
-        df_features = build_features(
-            df_input=df_input,
-            tariff=tariff,
-            capex=capex,
-            opex=opex,
-            discount_rate=discount_rate,
-            irradiance=irradiance
-        )
-
-        # --- Predictions using ML models ---
-        savings = predict_savings(df_features, tariff, capex, opex, discount_rate)
-        carbon = predict_carbon_reduction(df_features, carbon_factor)
+        # ---- Savings Prediction ----
+        savings = predict_savings(df, tariff, capex, opex, discount_rate)
+        carbon = predict_carbon_reduction(df, carbon_factor)
         lcoe_value = predict_lcoe(capex, opex, irradiance)
 
-        # --- Compute performance ratio ---
         performance = compute_performance_ratio(
             pv_size_kw=system_size["pv_kw"],
             irradiance=irradiance,
