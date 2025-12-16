@@ -207,6 +207,7 @@ if run_button:
         st.metric("Annual OPEX / Maintenance", f"₦{opex:,.2f}")
 
     with col2:
+        st.header("")
         st.metric("Total 25-Year Savings", f"₦{savings['total_savings']:,.2f}")
         st.metric("Payback Period", f"{savings['payback_years']:.1f} years")
 
