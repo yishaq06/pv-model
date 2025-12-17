@@ -18,13 +18,25 @@ def _load_pipeline():
 def predict_carbon_reduction(df_input, carbon_factor=0.5346):
     pipeline = _load_pipeline()
     try:
-        df_features = build_features(df_input, 0, 0, 0, 0)
+        # Use build_features for ML prediction
+        df_features = build_features(
+            df_input=df_input,
+            tariff=0,  # irrelevant for CO2 model
+            capex=0,
+            opex=0,
+            discount_rate=0
+        )
         pred = pipeline.predict(df_features)
         annual_tons = float(pred[0])
         return {"annual_tons": annual_tons, "lifetime_tons": annual_tons * 25}
+
     except Exception:
-        # fallback
-        annual_load = df_input["load_kwh"].sum()
+        # fallback: use first numeric column as annual load
+        try:
+            annual_load = df_input.select_dtypes(include='number').iloc[:, 0].sum()
+        except Exception:
+            annual_load = 100 * 365  # rough default if input invalid
+
         annual_tons = round(annual_load * carbon_factor * 0.7 / 1000, 2)
         lifetime_tons = annual_tons * 25
         return {"annual_tons": annual_tons, "lifetime_tons": lifetime_tons}

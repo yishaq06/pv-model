@@ -18,7 +18,9 @@ def _load_pipeline():
 def predict_lcoe(capex, opex, irradiance):
     pipeline = _load_pipeline()
     try:
-        df_features = build_features(pd.DataFrame({"load_kwh": [1]}), 0, capex, opex, 0, irradiance)
+        # Use a safe numeric column to build features
+        df_input = pd.DataFrame({"dummy_load": [1]})
+        df_features = build_features(df_input, 0, capex, opex, 0, irradiance)
         pred = pipeline.predict(df_features)
         return float(pred[0])
     except Exception:
