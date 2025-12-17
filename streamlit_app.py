@@ -101,10 +101,10 @@
 import streamlit as st
 import pandas as pd
 
-from models.savings_model import predict_savings
-from models.system_size_model import predict_system_size
-from models.carbon_model import predict_carbon_reduction
-from models.lcoe_model import predict_lcoe
+from models.savings_model_v1 import predict_savings
+from models.system_size_model_v1 import predict_system_size
+from models.carbon_model_v1 import predict_carbon_reduction
+from models.lcoe_model_v1 import predict_lcoe
 from models.performance_model import compute_performance_ratio
 
 # ---------------- Page Config ----------------
