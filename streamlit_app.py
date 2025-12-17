@@ -101,7 +101,7 @@
 import streamlit as st
 import pandas as pd
 
-from models.feature_builder import build_features
+from feature_builder import build_features
 from models.savings_model import predict_savings
 from models.system_size_model import predict_system_size
 from models.carbon_model import predict_carbon_reduction
