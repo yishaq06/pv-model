@@ -40,11 +40,12 @@ def predict_savings(df_input, tariff, capex, opex, discount_rate):
         }
 
     except Exception:
-        # fallback using df_features instead of load_kwh
+        # fallback using only df_input (no df_features)
+        # Assume annual load is sum of first numeric column
         try:
-            annual_load = df_features["Annual energy consumption from the grid (kWh)            D"].iloc[0]
-        except KeyError:
-            annual_load = df_input.iloc[:, 0].sum()  # fallback to first column if needed
+            annual_load = df_input.iloc[:, 0].sum()
+        except Exception:
+            annual_load = 100 * 365  # very rough default if df_input invalid
 
         annual_savings = annual_load * tariff * 0.65
         cumulative = [annual_savings * (i + 1) for i in range(25)]
