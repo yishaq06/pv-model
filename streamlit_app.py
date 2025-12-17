@@ -106,6 +106,7 @@ from models.system_size_model import predict_system_size
 from models.carbon_model import predict_carbon_reduction
 from models.lcoe_model import predict_lcoe
 from models.performance_model import compute_performance_ratio
+from feature_builder import build_features
 
 # ---------------- Page Config ----------------
 st.set_page_config(
@@ -157,22 +158,28 @@ with st.sidebar:
 if run_button:
     with st.spinner("Running ML-powered forecasting..."):
 
-        # Create synthetic df for compatibility with ML models
-        # df = pd.DataFrame({"load_kwh": [daily_load]})
-        annual_load_kwh = daily_load * 365  # convert kWh/day → kWh/year
-        df = pd.DataFrame({"load_kwh": [annual_load_kwh]})
-
+        # --- Build feature dataframe from inputs ---
+        df_features = build_features(
+            daily_load=daily_load,
+            peak_demand=peak_demand,
+            tariff=tariff,
+            discount_rate=discount_rate,
+            carbon_factor=carbon_factor,
+            CAPEX_PER_KW=CAPEX_PER_KW,
+            OPEX_PERCENT=OPEX_PERCENT,
+            irradiance=irradiance
+        )
 
         # ---- System Sizing ----
-        system_size = predict_system_size(df)  # ML predicted PV and battery size
+        system_size = predict_system_size(df_features)
 
         # ---- CAPEX & OPEX Derivation ----
         capex = system_size["pv_kw"] * CAPEX_PER_KW
         opex = capex * OPEX_PERCENT
 
         # ---- Savings Prediction ----
-        savings = predict_savings(df, tariff, capex, opex, discount_rate)
-        carbon = predict_carbon_reduction(df, carbon_factor)
+        savings = predict_savings(df_features, tariff, capex, opex, discount_rate)
+        carbon = predict_carbon_reduction(df_features, carbon_factor)
         lcoe_value = predict_lcoe(capex, opex, irradiance)
 
         performance = compute_performance_ratio(
